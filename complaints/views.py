@@ -4,7 +4,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import transaction
-from django.db.models import Q
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -29,22 +28,6 @@ def filtered_complaints(request):
     queryset = Complaint.objects.select_related("student", "student__profile", "assigned_to").prefetch_related("attachments")
     if form.is_valid():
         data = form.cleaned_data
-        if data.get("q"):
-            term = data["q"].strip()
-            visible_reporter_match = (
-                Q(is_anonymous=False)
-                & (
-                    Q(student__username__icontains=term)
-                    | Q(student__first_name__icontains=term)
-                    | Q(student__last_name__icontains=term)
-                )
-            )
-            queryset = queryset.filter(
-                Q(reference__icontains=term)
-                | Q(title__icontains=term)
-                | Q(description__icontains=term)
-                | visible_reporter_match
-            )
         for field in ("status", "category", "priority", "assigned_department"):
             if data.get(field):
                 queryset = queryset.filter(**{field: data[field]})
@@ -64,6 +47,7 @@ def paginated(request, queryset):
     page_obj = paginator.get_page(request.GET.get("page"))
     query_params = request.GET.copy()
     query_params.pop("page", None)
+    query_params.pop("q", None)
     return page_obj, query_params.urlencode()
 
 

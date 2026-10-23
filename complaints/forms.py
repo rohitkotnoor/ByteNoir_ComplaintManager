@@ -105,7 +105,6 @@ class AdminComplaintUpdateForm(forms.ModelForm):
 
 
 class ComplaintFilterForm(forms.Form):
-    q = forms.CharField(required=False, label="Search", max_length=100)
     status = forms.ChoiceField(required=False, choices=[("", "All statuses"), *Complaint.Status.choices])
     category = forms.ChoiceField(required=False, choices=[("", "All categories"), *Complaint.Category.choices])
     priority = forms.ChoiceField(required=False, choices=[("", "All priorities"), *Complaint.Priority.choices])

@@ -381,6 +381,7 @@ h3 { font-weight: 650; letter-spacing: -.015em; }
 .notification-actions { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
 .notification-actions form { margin: 0; }
 .stats-admin { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.filter-label { display: block; margin: 0 0 9px; color: var(--slate); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 
 @media (max-width: 560px) {
   .notification-card { align-items: flex-start; flex-direction: column; gap: 12px; }
