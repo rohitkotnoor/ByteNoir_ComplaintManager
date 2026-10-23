@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Access denied{% endblock %}
+{% block content %}
+<section class="error-panel"><p class="eyebrow">403 · Permission required</p><h1>This page is not available to your account.</h1><p>Your account does not have permission to view this page or complaint.</p><a class="button button-primary" href="{% url 'home' %}">Return home</a></section>
+{% endblock %}

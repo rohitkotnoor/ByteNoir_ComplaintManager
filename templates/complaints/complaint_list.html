@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}{% if my_complaints %}My complaints{% else %}All complaints{% endif %}{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">{% if my_complaints %}Student services · Your records{% else %}Administration · Case management{% endif %}</p><h1>{% if my_complaints %}My complaints{% else %}All complaints{% endif %}</h1><p class="section-intro">{% if my_complaints %}Review every concern you have submitted.{% else %}Search, filter, and open any campus complaint.{% endif %}</p></div>{% if my_complaints %}<a class="button button-primary" href="{% url 'complaints:create' %}">＋ Submit a complaint</a>{% endif %}</section>
+{% if filter_form %}{% include 'complaints/_filters.html' %}{% endif %}
+{% include 'complaints/_table.html' with complaints=page_obj.object_list admin_view=admin_view empty_title='No complaints found' empty_text='There are no records matching this view.' %}
+{% include 'complaints/_pagination.html' %}
+{% endblock %}

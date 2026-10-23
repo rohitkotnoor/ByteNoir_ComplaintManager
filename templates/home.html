@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}A better way to be heard{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">A considerate campus starts with listening</p>
+    <h1>Every concern deserves<br><em>a clear response.</em></h1>
+    <p class="hero-lede">The complaint management system gives students one trusted place to raise campus concerns and follow every update, from first report through resolution.</p>
+    <div class="hero-actions">
+      {% if user.is_authenticated %}<a class="button button-primary" href="{% url 'accounts:dashboard' %}">Go to your dashboard</a>
+      {% else %}<a class="button button-primary" href="{% url 'accounts:register' %}">Register as a student</a><a class="button button-quiet" href="{% url 'accounts:admin_register' %}">Register as an administrator</a>{% endif %}
+    </div>
+    {% if not user.is_authenticated %}<p class="hero-login-links">Already registered? <a href="{% url 'accounts:login' %}">Student sign in</a> · <a href="{% url 'accounts:admin_login' %}">Administrator login</a></p>{% endif %}
+    <div class="hero-note"><span class="note-rule"></span><span>Thoughtful reporting. Transparent progress. Better campus life.</span></div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="art-frame"><div class="art-topline"><span>STUDENT SERVICES</span><span>01 / 03</span></div><div class="art-stamp" aria-hidden="true"><span></span><span></span><span></span></div><div class="art-lines"><span></span><span></span><span></span></div><div class="art-caption">A record of every<br>voice and every action.</div><span class="art-seal">EST. FOR CAMPUS<br>COMMUNITY</span></div>
+  </div>
+</section>
+<section class="home-details">
+  <div><p class="eyebrow">The process</p><h2>Clear from the first report.</h2></div>
+  <div class="process-grid">
+    <article><span class="step-number">01</span><h3>Report with confidence</h3><p>Attach photos or documents, suggest a priority, and choose to keep your identity hidden from administrators.</p></article>
+    <article><span class="step-number">02</span><h3>Reach the right team</h3><p>Reports are routed by category. Administrators can assign a department or case owner and keep every change on record.</p></article>
+    <article><span class="step-number">03</span><h3>Track every update</h3><p>Follow status changes and official responses in your timeline, with notifications when the case moves or needs escalation.</p></article>
+  </div>
+</section>
+{% endblock %}

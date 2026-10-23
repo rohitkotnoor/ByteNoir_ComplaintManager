@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Administrator login{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-aside"><p class="eyebrow">Administrator access</p><h1>Support the campus<br><em>response process.</em></h1><p>Authorized administrators can sign in to review, prioritize, and respond to student concerns.</p></div>
+  <div class="auth-card"><p class="eyebrow">Administrator login</p><h2>Sign in as an administrator</h2><p class="section-intro">Use the username and password for your approved administrator account.</p>
+    {% if first_admin_setup_required %}<div class="reference-note"><strong>First administrator setup is required.</strong> No active superuser exists to approve administrator requests. In the project terminal, run <code>python manage.py createsuperuser</code> to create the first administrator. Pending requests can be approved after that.</div>{% endif %}
+    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    <form method="post" class="form-stack">{% csrf_token %}
+      {% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}</div>{% endfor %}
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <button class="button button-primary button-wide" type="submit">Login as administrator</button>
+    </form>
+    <p class="auth-switch">Student? <a href="{% url 'accounts:login' %}">Student sign in</a></p>
+  </div>
+</section>
+{% endblock %}

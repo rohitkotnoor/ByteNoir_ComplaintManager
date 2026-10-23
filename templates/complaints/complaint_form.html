@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+<section class="form-page">
+  <div class="page-heading"><div><p class="eyebrow">Student services · Secure submission</p><h1>{{ page_title }}</h1><p class="section-intro">Share enough detail for the right team to understand and respond to your concern.</p></div></div>
+  <div class="form-card">
+    {% if complaint %}<div class="reference-note">Editing <strong>{{ complaint.reference }}</strong> · Only available before review begins.</div>{% else %}<div class="reference-note">Your reference number will be assigned after submission. Anonymous reports keep your identity hidden from administrators while you can still track them from your account.</div>{% endif %}
+    {% if complaint.attachments.all %}<div class="existing-attachments"><strong>Current attachments</strong><ul>{% for attachment in complaint.attachments.all %}<li><a href="{% url 'complaints:attachment_download' attachment.pk %}">{{ attachment.original_name }}</a></li>{% endfor %}</ul></div>{% endif %}
+    <form method="post" enctype="multipart/form-data" class="form-stack">{% csrf_token %}
+      {% for field in form %}<div class="form-field{% if field.name == 'is_anonymous' %} checkbox-field{% endif %}"><label for="{{ field.id_for_label }}">{{ field }} {{ field.label }}{% if field.field.required %}<span class="required-mark">*</span>{% endif %}</label>{% if field.help_text %}<small class="field-help">{{ field.help_text }}</small>{% endif %}{% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}</div>{% endfor %}
+      {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="form-actions"><button type="submit" class="button button-primary">{% if complaint %}Save changes{% else %}Submit complaint{% endif %}</button><a class="button button-quiet" href="{% if complaint %}{% url 'complaints:detail' complaint.reference %}{% else %}{% url 'complaints:student_dashboard' %}{% endif %}">Cancel</a></div>
+    </form>
+  </div>
+</section>
+{% endblock %}

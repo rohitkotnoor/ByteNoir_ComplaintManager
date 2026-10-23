@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Administrator registration{% endblock %}
+{% block content %}
+<section class="auth-layout auth-layout-register">
+  <div class="auth-aside"><p class="eyebrow">Administrator registration</p><h1>Request access<br><em>to the response queue.</em></h1><p>Submit your details for review. Your account will remain inactive until an existing administrator approves it.</p></div>
+  <div class="auth-card"><p class="eyebrow">Request administrator access</p><h2>Your details</h2><p class="section-intro">Complete the form to submit an administrator account request.</p>
+    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    <form method="post" class="form-stack">{% csrf_token %}
+      {% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required-mark">*</span>{% endif %}</label>{{ field }}{% if field.help_text %}<small class="field-help">{{ field.help_text|safe }}</small>{% endif %}{% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}</div>{% endfor %}
+      <button class="button button-primary button-wide" type="submit">Submit administrator request</button>
+    </form>
+    <p class="auth-switch">Already approved? <a href="{% url 'accounts:admin_login' %}">Login as administrator</a></p>
+  </div>
+</section>
+{% endblock %}

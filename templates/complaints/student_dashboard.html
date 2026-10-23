@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Student dashboard{% endblock %}
+{% block content %}
+<section class="page-heading dashboard-heading"><div><p class="eyebrow">Student services · Your overview</p><h1>Good day, {{ user.first_name|default:user.username }}.</h1><p class="section-intro">Your concerns and their progress, gathered in one place.</p><p class="college-register-note">College Register Number <strong>{{ user.profile.student_id }}</strong></p></div><a class="button button-primary" href="{% url 'complaints:create' %}">＋ Submit a complaint</a></section>
+<section class="stats-grid" aria-label="Complaint statistics">
+  <article class="stat-card"><span class="stat-label">Total submitted</span><strong>{{ counts.total }}</strong><span class="stat-foot">All your reports</span></article>
+  <article class="stat-card"><span class="stat-label">Awaiting action</span><strong>{{ counts.pending }}</strong><span class="stat-foot">Submitted or under review</span></article>
+  <article class="stat-card"><span class="stat-label">In progress</span><strong>{{ counts.in_progress }}</strong><span class="stat-foot">Being addressed</span></article>
+  <article class="stat-card"><span class="stat-label">Resolved</span><strong>{{ counts.resolved }}</strong><span class="stat-foot">Closed with a resolution</span></article>
+</section>
+<section class="content-section"><div class="section-heading"><div><p class="eyebrow">Your activity</p><h2>Recent complaints</h2></div><a class="text-link" href="{% url 'complaints:mine' %}">View all complaints <span aria-hidden="true">→</span></a></div>
+  {% include 'complaints/_table.html' with complaints=recent empty_title='No complaints yet' empty_text='Your submitted concerns will appear here.' %}
+</section>
+{% endblock %}

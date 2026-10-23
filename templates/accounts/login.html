@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-aside"><p class="eyebrow">Welcome back</p><h1>Your campus,<br><em>in conversation.</em></h1><p>Sign in to review your complaint updates or manage the campus response queue.</p></div>
+  <div class="auth-card"><p class="eyebrow">Student sign in</p><h2>Sign in to student services</h2><p class="section-intro">Use your registered username and password.</p>
+    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    <form method="post" class="form-stack">{% csrf_token %}
+      {% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}</div>{% endfor %}
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <button class="button button-primary button-wide" type="submit">Sign in</button>
+    </form>
+    <p class="auth-switch">New here? <a href="{% url 'accounts:register' %}">Create a student account</a></p>
+  </div>
+</section>
+{% endblock %}

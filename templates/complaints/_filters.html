@@ -1,0 +1,6 @@
+<form method="get" class="filter-panel" role="search">
+  <div class="filter-fields">
+    {% for field in filter_form %}<div class="filter-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.errors %}<small class="field-error">{{ field.errors|striptags }}</small>{% endif %}</div>{% endfor %}
+  </div>
+  <div class="filter-actions"><button type="submit" class="button button-primary button-small">Apply filters</button><a class="text-link" href="{% url 'complaints:admin_list' %}">Clear</a></div>
+</form>

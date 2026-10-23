@@ -1,0 +1,53 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172331">
+  <title>{% block title %}College Complaint Management System{% endblock %} · College Complaint Management System</title>
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <script src="{% static 'js/site.js' %}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="{% url 'home' %}" aria-label="College Complaint Management System home">
+        <span class="brand-copy"><strong>Student Services</strong><small>College Complaint Management System</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+      <nav class="primary-nav" id="primary-nav" aria-label="Main navigation">
+        {% if user.is_authenticated %}
+          {% if user.is_superuser or user.profile.role == 'ADMIN' %}
+            <a href="{% url 'complaints:admin_dashboard' %}">Overview</a>
+            <a href="{% url 'complaints:admin_list' %}">All complaints</a>
+          {% else %}
+            <a href="{% url 'complaints:student_dashboard' %}">My dashboard</a>
+            <a href="{% url 'complaints:mine' %}">My complaints</a>
+            <a class="nav-action" href="{% url 'complaints:create' %}">Submit complaint</a>
+          {% endif %}
+          <a href="{% url 'complaints:notifications' %}">Notifications{% if unread_notification_count %}<span class="notification-count">{{ unread_notification_count }}</span>{% endif %}</a>
+          <form class="logout-form" action="{% url 'accounts:logout' %}" method="post">{% csrf_token %}<button class="nav-logout" type="submit">Sign out</button></form>
+        {% else %}
+          <a href="{% url 'accounts:login' %}">Student sign in</a>
+          <a href="{% url 'accounts:admin_login' %}">Administrator login</a>
+          <a href="{% url 'accounts:admin_register' %}">Administrator registration</a>
+          <a class="nav-action" href="{% url 'accounts:register' %}">Student registration</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main id="main-content" class="page-shell">
+    {% if messages %}
+      <div class="message-stack" aria-live="polite">
+        {% for message in messages %}<div class="message message-{{ message.tags|default:'info' }}">{{ message }}</div>{% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner"><span>Student Services</span><span>College Complaint Management System</span><span>Designed for a more responsive campus.</span></div>
+  </footer>
+</body>
+</html>

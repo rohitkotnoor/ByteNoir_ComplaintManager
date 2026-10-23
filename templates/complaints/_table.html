@@ -1,0 +1,14 @@
+<div class="table-wrap">
+  <table class="complaint-table">
+    <thead><tr><th scope="col">Reference / Title</th>{% if admin_view %}<th scope="col">Student</th>{% endif %}<th scope="col">Category</th>{% if admin_view %}<th scope="col">Department</th>{% endif %}<th scope="col">Priority</th><th scope="col">Status</th><th scope="col">Submitted</th><th scope="col"><span class="sr-only">Action</span></th></tr></thead>
+    <tbody>
+      {% for complaint in complaints %}<tr>
+        <td><a class="table-title" href="{% if admin_view %}{% url 'complaints:admin_detail' complaint.reference %}{% else %}{% url 'complaints:detail' complaint.reference %}{% endif %}"><span class="table-ref">{{ complaint.reference }}</span>{{ complaint.title }}</a></td>
+        {% if admin_view %}<td>{% if complaint.is_anonymous %}<span class="student-name">Anonymous reporter</span>{% else %}<span class="student-name">{{ complaint.student.get_full_name|default:complaint.student.username }}</span>{% if complaint.student.profile.student_id %}<small>College no.: {{ complaint.student.profile.student_id }}</small>{% endif %}{% endif %}</td>{% endif %}
+        <td>{{ complaint.get_category_display }}</td>{% if admin_view %}<td>{{ complaint.get_assigned_department_display }}{% if complaint.assigned_to %}<small>{{ complaint.assigned_to.get_full_name|default:complaint.assigned_to.username }}</small>{% endif %}</td>{% endif %}<td><span class="priority priority-{{ complaint.priority|lower }}">{{ complaint.get_priority_display }}</span></td>
+        <td><span class="status status-{{ complaint.status|lower }}">{{ complaint.get_status_display }}</span></td><td>{{ complaint.created_at|date:'d M Y' }}</td>
+        <td><a class="row-link" aria-label="Open {{ complaint.reference }}" href="{% if admin_view %}{% url 'complaints:admin_detail' complaint.reference %}{% else %}{% url 'complaints:detail' complaint.reference %}{% endif %}">View <span aria-hidden="true">→</span></a></td>
+      </tr>{% empty %}<tr><td colspan="{% if admin_view %}8{% else %}6{% endif %}"><div class="empty-state"><span class="empty-mark" aria-hidden="true">—</span><h3>{{ empty_title|default:'Nothing to show yet' }}</h3><p>{{ empty_text|default:'When there is activity, it will appear here.' }}</p></div></td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>

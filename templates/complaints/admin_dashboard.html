@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Administrator dashboard{% endblock %}
+{% block content %}
+<section class="page-heading dashboard-heading"><div><p class="eyebrow">Administration · Complaint oversight</p><h1>Campus response overview</h1><p class="section-intro">A live view of reports received and the work still in progress.</p></div><a class="button button-quiet" href="{% url 'complaints:admin_list' %}">Open all complaints →</a></section>
+<section class="stats-grid stats-admin" aria-label="Complaint statistics">
+  <article class="stat-card"><span class="stat-label">Total complaints</span><strong>{{ counts.total }}</strong><span class="stat-foot">All submissions</span></article>
+  <article class="stat-card"><span class="stat-label">Needs review</span><strong>{{ counts.pending }}</strong><span class="stat-foot">Submitted or under review</span></article>
+  <article class="stat-card"><span class="stat-label">In progress</span><strong>{{ counts.in_progress }}</strong><span class="stat-foot">Currently being addressed</span></article>
+  <article class="stat-card"><span class="stat-label">Resolved</span><strong>{{ counts.resolved }}</strong><span class="stat-foot">Marked resolved</span></article>
+  <article class="stat-card stat-attention"><span class="stat-label">High priority</span><strong>{{ counts.attention }}</strong><span class="stat-foot">Open high or urgent cases</span></article>
+  <article class="stat-card stat-escalated"><span class="stat-label">Escalated</span><strong>{{ counts.escalated }}</strong><span class="stat-foot">Past the response window</span></article>
+</section>
+<section class="content-section"><div class="section-heading"><div><p class="eyebrow">Case management</p><h2>Complaint queue</h2></div></div>
+  {% include 'complaints/_filters.html' %}
+  {% include 'complaints/_table.html' with complaints=page_obj.object_list empty_title='No matching complaints' empty_text='Try adjusting the filters or search terms.' admin_view=True %}
+  {% include 'complaints/_pagination.html' %}
+</section>
+{% endblock %}

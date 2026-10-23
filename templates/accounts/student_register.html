@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Student registration{% endblock %}
+{% block content %}
+<section class="register-page">
+  <header class="register-heading"><p class="eyebrow">Student registration</p><h1>Create your account</h1><p>Enter your details to register.</p></header>
+  <div class="auth-card register-card">
+    <form method="post" class="form-stack">{% csrf_token %}
+      {% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required-mark">*</span>{% endif %}</label>{{ field }}{% if field.help_text %}<small class="field-help">{{ field.help_text|safe }}</small>{% endif %}{% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}</div>{% endfor %}
+      <button class="button button-primary button-wide" type="submit">Create student account</button>
+    </form>
+    <p class="auth-switch">Already registered? <a href="{% url 'accounts:login' %}">Student sign in</a></p>
+  </div>
+</section>
+{% endblock %}

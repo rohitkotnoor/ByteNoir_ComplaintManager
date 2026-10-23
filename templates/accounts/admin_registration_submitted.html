@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Administrator request submitted{% endblock %}
+{% block content %}
+<section class="error-panel">
+  <p class="eyebrow">Request submitted</p>
+  <h1>Thank you for your request.</h1>
+  <p>Your administrator account is inactive until an existing administrator approves it and grants the required access. You can sign in after approval.</p>
+  {% if first_admin_setup_required %}<div class="reference-note"><strong>First administrator setup is required.</strong> No active superuser exists to review requests. Create the first administrator from the project terminal with <code>python manage.py createsuperuser</code>. That administrator can then approve this request.</div>{% endif %}
+  <a class="button button-primary" href="{% url 'accounts:admin_login' %}">Administrator login</a>
+  <a class="button button-quiet" href="{% url 'home' %}">Return home</a>
+</section>
+{% endblock %}
