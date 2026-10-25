@@ -184,6 +184,11 @@ h3 { margin-bottom: 7px; font-size: 16px; }
 .form-field label { display: block; margin-bottom: 6px; color: #37424a; font-size: 12px; font-weight: 650; }
 .required-mark { margin-left: 3px; color: var(--red); }
 .form-field input, .form-field textarea, .form-field select { width: 100%; min-height: 43px; padding: 10px 12px; border: 1px solid #d7deeb; border-radius: 7px; background: var(--paper); color: var(--ink); }
+.password-field { position: relative; }
+.form-field .password-field input { padding-right: 54px; }
+.password-toggle { position: absolute; top: 50%; right: 5px; display: grid; width: 36px; height: 36px; place-items: center; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--accent); cursor: pointer; transform: translateY(-50%); }
+.password-toggle svg { display: block; width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.password-toggle:hover { color: #5148e5; }
 .form-field textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
 .form-field input:focus, .form-field textarea:focus, .form-field select:focus, .filter-field input:focus, .filter-field select:focus { border-color: var(--accent); outline: 2px solid rgba(98, 92, 245, .14); }
 .field-help { display: block; margin-top: 5px; color: #878d8e; font-size: 10px; }

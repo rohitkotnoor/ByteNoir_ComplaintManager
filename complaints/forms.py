@@ -65,10 +65,22 @@ class ComplaintForm(forms.ModelForm):
             raise ValidationError("A complaint can have at most 5 attachments.")
         allowed_extensions = {".jpg", ".jpeg", ".png", ".webp", ".pdf"}
         for uploaded_file in files:
-            if PurePath(uploaded_file.name).suffix.lower() not in allowed_extensions:
+            extension = PurePath(uploaded_file.name).suffix.lower()
+            if extension not in allowed_extensions:
                 raise ValidationError("Use JPG, PNG, WebP, or PDF files only.")
             if uploaded_file.size > 10 * 1024 * 1024:
                 raise ValidationError("Each attachment must be 10 MB or smaller.")
+            header = uploaded_file.read(12)
+            uploaded_file.seek(0)
+            signature_matches = {
+                ".jpg": header.startswith(b"\xff\xd8\xff"),
+                ".jpeg": header.startswith(b"\xff\xd8\xff"),
+                ".png": header.startswith(b"\x89PNG\r\n\x1a\n"),
+                ".webp": len(header) >= 12 and header[:4] == b"RIFF" and header[8:12] == b"WEBP",
+                ".pdf": header.startswith(b"%PDF-"),
+            }
+            if not signature_matches[extension]:
+                raise ValidationError("The attachment contents do not match the selected file type.")
         return files
 
     def clean_suggested_priority(self):

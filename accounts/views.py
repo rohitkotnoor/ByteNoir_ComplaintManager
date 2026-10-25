@@ -13,15 +13,16 @@ from accounts.forms import (
     StyledAuthenticationForm,
 )
 from accounts.permissions import is_administrator, is_student
+from accounts.throttling import LoginThrottleMixin
 
 
-class SignInView(LoginView):
+class SignInView(LoginThrottleMixin, LoginView):
     template_name = "accounts/login.html"
     authentication_form = StyledAuthenticationForm
     redirect_authenticated_user = True
 
 
-class AdministratorSignInView(LoginView):
+class AdministratorSignInView(LoginThrottleMixin, LoginView):
     template_name = "accounts/admin_login.html"
     authentication_form = AdministratorAuthenticationForm
     redirect_authenticated_user = False

@@ -55,6 +55,12 @@ requirements.txt
 
 Open the project folder in VS Code and run these commands in its terminal, one at a time:
 
+For local development, explicitly enable debug mode in this terminal before running Django commands:
+
+```powershell
+$env:DJANGO_DEBUG = "1"
+```
+
 1. Confirm Python is available:
 
    ```powershell
@@ -77,10 +83,9 @@ Open the project folder in VS Code and run these commands in its terminal, one a
    python -m pip install -r requirements.txt
    ```
 
-4. Create and apply the database migrations:
+4. Apply the database migrations:
 
    ```powershell
-   python manage.py makemigrations accounts complaints
    python manage.py migrate
    ```
 
@@ -92,10 +97,10 @@ Open the project folder in VS Code and run these commands in its terminal, one a
 
    Django's user-created signal assigns a newly created superuser the administrator profile role. Do not add real credentials to source code.
 
-6. Start the local server:
+6. Start the local server, bound to this computer only:
 
    ```powershell
-   python manage.py runserver
+   python manage.py runserver 127.0.0.1:8000
    ```
 
 7. Open **http://127.0.0.1:8000/** in your browser. The Django administration site is at **http://127.0.0.1:8000/django-admin/**.
@@ -103,6 +108,8 @@ Open the project folder in VS Code and run these commands in its terminal, one a
 ## Using the application
 
 - Students choose **Register as a student** from the home page, create an account, then choose **Submit a complaint**. Their dashboard and **My complaints** show only their own reports.
+- Sign-in throttles repeated failures by account and account/source-IP pair. After repeated failures, wait 15 minutes before trying again.
+- New passwords must be at least 12 characters and pass Django's common-password and user-similarity checks.
 - Administrators can choose **Register as an administrator** to submit an access request. The account stays inactive until an existing superuser approves it in Django Admin by activating the user, enabling Staff status, and granting the complaint view and change permissions. After approval, sign in through **Login as administrator**.
 - Administrator access requires a superuser account or an authorized staff account. The first administrator must still be created with `python manage.py createsuperuser` so there is an existing account that can approve later requests.
 - A staff user can be authorized by a superuser through Django Admin: create or select the user, mark **Staff status**, set that user's Profile role to **Administrator**, and grant the `complaints | complaint | Can view complaint` and `Can change complaint` permissions. Superusers always have administrator access.
@@ -129,4 +136,13 @@ Tests cover registration and login, complaint input validation and submission, o
 
 ## Configuration and production notes
 
-Local development uses SQLite and a development-only fallback secret. When `DJANGO_DEBUG=0`, the application requires `DJANGO_SECRET_KEY` and will not start without it. Before any production deployment, set that variable to a strong secret outside source control, set `DJANGO_DEBUG=0`, and set `DJANGO_ALLOWED_HOSTS` to the exact hostnames. Configure HTTPS, secure cookies, static-file serving, backups, and a production database before hosting this project. The built-in Django development server is for local use only.
+The app defaults to production-safe settings: debug is off, and startup requires a secret key and explicit allowed hostnames. For local development, set `DJANGO_DEBUG=1` in the terminal as shown above; a temporary random secret is generated for that process.
+
+Before production deployment:
+
+- Set `DJANGO_DEBUG=0`, store a strong `DJANGO_SECRET_KEY` in the hosting provider's secret manager, and set `DJANGO_ALLOWED_HOSTS` to exact hostnames without schemes or paths.
+- Set `DJANGO_CSRF_TRUSTED_ORIGINS` to the exact HTTPS origins when needed, such as `https://complaints.example.edu`.
+- Serve the app over HTTPS. Production redirects to HTTPS, sets secure session and CSRF cookies, and enables HSTS. If TLS ends at a trusted reverse proxy that overwrites `X-Forwarded-Proto`, set `DJANGO_TRUST_PROXY_SSL_HEADER=1` so Django can detect HTTPS correctly; never enable it when clients can supply that header directly.
+- Keep uploaded complaint files private. Do not configure the web server to serve `MEDIA_ROOT` or `/media/` publicly; users should access attachments only through the authenticated download view.
+- Configure request rate limits at the reverse proxy or hosting edge as another layer against distributed login attempts. The built-in sign-in throttle limits repeated failures by account and account/source-IP pair.
+- Configure a production database, backups, and private file storage. The built-in Django development server is for local use only.
